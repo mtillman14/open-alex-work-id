@@ -1,8 +1,8 @@
 {
 	"manifest_version": 2,
-	"name": "Make It Red",
+	"name": "OpenAlex Work ID",
 	"version": "2.0",
-	"description": "Makes everything red",
+	"description": "Set the OpenAlex Work ID",
 	"homepage_url": "https://github.com/zotero/make-it-red",
 	"applications": {
 		"zotero": {
