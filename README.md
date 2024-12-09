@@ -5,3 +5,5 @@
 Currently, the Zotero item's DOI is used to identify the item in OpenAlex. If a Zotero item does not have a DOI, then it will not be able to return an OpenAlex Work ID.
 
 In the future, I plan to implement using other metadata when the DOI is missing to obtain a broader range of OpenAlex work ID's.
+
+Download the latest version of the plugin [here](https://github.com/mtillman14/open-alex-work-id/releases/latest).
