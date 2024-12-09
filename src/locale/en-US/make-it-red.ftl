@@ -1,2 +1,2 @@
-make-it-red-green-instead =
+open-alex-work-id-green-instead =
     .label = Make It Green Instead
