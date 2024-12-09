@@ -25,6 +25,7 @@ MakeItRed = {
                 }
 
                 num_items = selectedItems.length;
+                let num_items_added = 0;
                 for (let i = 0; i < num_items; i++) {
                     let item = selectedItems[i];
                     if (!item.isRegularItem()) {
@@ -61,6 +62,7 @@ MakeItRed = {
                         extra += (extra ? '\n' : '') + `OpenAlex Work ID: ${workID}`;
                         item.setField('extra', extra);
                         await item.saveTx(); // Save the changes to the item
+                        num_items_added += 1;
                         if (num_items==1) {
                             window.alert("OpenAlex Work ID added to 'extra' field.");
                         }
@@ -72,7 +74,7 @@ MakeItRed = {
                     }
                 }
                 if (num_items > 1) {
-                    window.alert(`Finished adding OpenAlex Work IDs to ${num_items} items.`)
+                    window.alert(`Finished adding OpenAlex Work IDs to ${num_items} items (${num_items_added} new).`)
                 }
             } catch (error) {
                 Zotero.debug("Error adding OpenAlex Work ID:", error);
