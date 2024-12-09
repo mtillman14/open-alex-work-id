@@ -1,13 +1,13 @@
 {
 	"manifest_version": 2,
 	"name": "OpenAlex Work ID",
-	"version": "2.0",
+	"version": "1.0",
 	"description": "Set the OpenAlex Work ID",
 	"homepage_url": "https://github.com/mtillman14/open-alex-work-id",
 	"applications": {
 		"zotero": {
 			"id": "open-alex-work-id@example.com",
-			"update_url": "https://zotero-download.s3.amazonaws.com/tmp/make-it-red/updates-2.0.json",
+			"update_url": "mtillman14.github.io/files/software/open-alex-work-id-updates.json",
 			"strict_min_version": "6.999",
 			"strict_max_version": "7.0.*"
 		}
