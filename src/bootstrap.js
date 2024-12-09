@@ -3,11 +3,11 @@ function uninstall() {}
 
 async function startup({ id, version, rootURI }) {
     Zotero.PreferencePanes.register({
-        pluginID: 'open-alex-work-id@example.com',
+        pluginID: 'make-it-red@example.com',
         src: rootURI + 'preferences.xhtml',
         scripts: [rootURI + 'preferences.js']
     });
-    Services.scriptloader.loadSubScript(rootURI + 'open-alex-work-id.js');
+    Services.scriptloader.loadSubScript(rootURI + 'make-it-red.js');
     OpenAlexWorkID.init({ id, version, rootURI });
     OpenAlexWorkID.addToAllWindows();
     await OpenAlexWorkID.main();
