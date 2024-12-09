@@ -1,1 +1,1 @@
-pref("extensions.make-it-red.intensity", 100);
+pref("extensions.open-alex-work-id.intensity", 100);
