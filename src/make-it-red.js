@@ -1,6 +1,6 @@
-if (!MakeItRed) var MakeItRed = {};
+if (!OpenAlexWorkID) var OpenAlexWorkID = {};
 
-MakeItRed = {
+OpenAlexWorkID = {
     init({ id, version, rootURI }) {
         this.id = id;
         this.version = version;
@@ -154,5 +154,5 @@ async function fetchOpenAlexJSON(item,window) {
 }
 
 if (typeof window === 'undefined') {
-    this.MakeItRed = MakeItRed;
+    this.OpenAlexWorkID = OpenAlexWorkID;
 }

@@ -8,12 +8,12 @@ async function startup({ id, version, rootURI }) {
         scripts: [rootURI + 'preferences.js']
     });
     Services.scriptloader.loadSubScript(rootURI + 'make-it-red.js');
-    MakeItRed.init({ id, version, rootURI });
-    MakeItRed.addToAllWindows();
-    await MakeItRed.main();
+    OpenAlexWorkID.init({ id, version, rootURI });
+    OpenAlexWorkID.addToAllWindows();
+    await OpenAlexWorkID.main();
 }
 
 function shutdown() {
-    MakeItRed.removeFromAllWindows();
-    MakeItRed = undefined;
+    OpenAlexWorkID.removeFromAllWindows();
+    OpenAlexWorkID = undefined;
 }
