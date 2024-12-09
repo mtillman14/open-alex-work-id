@@ -29,8 +29,10 @@ MakeItRed = {
                 for (let i = 0; i < num_items; i++) {
                     let item = selectedItems[i];
                     if (!item.isRegularItem()) {
-                        window.alert("Selected item is not a regular Zotero item.");
-                        return;
+                        if (num_items==1) {
+                            window.alert("Selected item is not a regular Zotero item.");
+                        }
+                        continue;
                     }
 
                     // Debug logging using Zotero's system
@@ -84,9 +86,7 @@ MakeItRed = {
         itemMenuPopup.appendChild(menuItem);
 
         itemMenuPopup.addEventListener("popupshowing", () => {
-            menuItem.hidden = Zotero.getActiveZoteroPane()
-                .getSelectedItems()
-                .some(item => !item.isRegularItem());
+            menuItem.hidden = Zotero.getActiveZoteroPane().getSelectedItems().length === 0;
         });
     },
 
