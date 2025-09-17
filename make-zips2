@@ -1,0 +1,22 @@
+#!/bin/bash
+set -euo pipefail
+
+rm -rf build
+mkdir build
+
+# Get version from manifest.json
+VERSION=$(jq -r '.version' src/manifest.json)
+
+# Build from src directory
+cd src
+zip -r "../build/open-alex-work-id-${VERSION}.xpi" *
+cd ../build
+
+# Generate update manifest with hash if template exists
+TEMPLATE_FILE="../updates-${VERSION}.json.tmpl"
+if [ -f "$TEMPLATE_FILE" ]; then
+    jq ".addons[\"open-alex-work-id@example.com\"].updates[0].update_hash = \"sha256:`shasum -a 256 open-alex-work-id-${VERSION}.xpi | cut -d' ' -f1`\"" "$TEMPLATE_FILE" > "updates-${VERSION}.json"
+    echo "Update manifest created: updates-${VERSION}.json"
+fi
+
+echo "Build complete! XPI file created: build/open-alex-work-id-${VERSION}.xpi"

@@ -40,10 +40,10 @@ OpenAlexWorkID = {
                     Zotero.debug(item);
                     Zotero.debug("Item type: " + item.itemType);
                                
-                    let data = await fetchOpenAlexJSON(item,window);
+                    let data = await fetchOpenAlexJSON(item, window);
                     if (!data) {
                         if (num_items==1) {
-                            window.alert("No Work ID found for the selected item. Check the item's DOI");
+                            window.alert("No Work ID found for the selected item. Check the item's DOI or Extra field.");
                         }
                         continue;
                     }
@@ -53,15 +53,17 @@ OpenAlexWorkID = {
                     Zotero.debug(workID)
 
                     if (!workID) {
-                        window.alert("No Work ID found for the selected item. Check the item's DOI");
+                        window.alert("No Work ID found for the selected item. Check the item's DOI or Extra field.");
                         continue;
                     }
                     
                     // Add the Work ID to the 'extra' field
                     let extra = item.getField('extra') || '';
                     if (!extra.includes(`OpenAlex Work ID:`)) {
-                        // Add the OpenAlex Work ID
-                        extra += (extra ? '\n' : '') + `OpenAlex Work ID: ${workID}`;
+                        // Check if extra field contains only a DOI and replace it
+                        if (isDOIOnlyExtra(extra)) {
+                            extra += (extra ? '\n' : '') + `OpenAlex Work ID: ${workID}`;
+                        }
                         item.setField('extra', extra);
                         await item.saveTx(); // Save the changes to the item
                         num_items_added += 1;
@@ -113,12 +115,72 @@ OpenAlexWorkID = {
     async main() {}
 };
 
-// Example function to fetch OpenAlex Work ID (this is a placeholder)
-async function fetchOpenAlexJSON(item,window) {
-    // Example: Use a doi to search OpenAlex
-    let doi = item.getField('DOI');
-    Zotero.debug("DOI:")
-    Zotero.debug(doi)
+// Helper function to check if Extra field contains only a DOI
+function isDOIOnlyExtra(extra) {
+    if (!extra) return false;
+    
+    const trimmed = extra.trim();
+    
+    // Check for "DOI: {doi}" format (case insensitive)
+    const doiPattern = /^DOI:\s*(.+)$/i;
+    const match = trimmed.match(doiPattern);
+    
+    if (match) {
+        const doiValue = match[1].trim();
+        return isValidDOI(doiValue);
+    }
+    
+    return false;
+}
+
+// Helper function to validate DOI format
+function isValidDOI(doi) {
+    if (!doi) return false;
+    
+    // Remove potential https://doi.org/ prefix
+    let cleanDOI = doi.replace(/^https?:\/\/doi\.org\//, '');
+    
+    // DOI pattern: starts with "10." followed by registrant code and suffix
+    const doiPattern = /^10\.\d{4,}[\/\.].*$/;
+    return doiPattern.test(cleanDOI);
+}
+
+// Helper function to extract DOI from Extra field
+function extractDOIFromExtra(extra) {
+    if (!extra) return null;
+    
+    const trimmed = extra.trim();
+    const doiPattern = /^DOI:\s*(.+)$/i;
+    const match = trimmed.match(doiPattern);
+    
+    if (match) {
+        return match[1].trim();
+    }
+    
+    return null;
+}
+
+// Updated function to fetch OpenAlex Work ID
+async function fetchOpenAlexJSON(item, window) {
+    let doi = null;
+    
+    // First, try to get DOI from the regular DOI field
+    doi = item.getField('DOI');
+    Zotero.debug("DOI from DOI field:");
+    Zotero.debug(doi);
+    
+    // If no DOI in the regular field, check if Extra field contains only a DOI
+    if (!doi) {
+        const extra = item.getField('extra') || '';
+        Zotero.debug("Extra field content:");
+        Zotero.debug(extra);
+        
+        if (isDOIOnlyExtra(extra)) {
+            doi = extractDOIFromExtra(extra);
+            Zotero.debug("DOI extracted from Extra field:");
+            Zotero.debug(doi);
+        }
+    }
 
     if (!doi) {        
         return null;
@@ -134,6 +196,7 @@ async function fetchOpenAlexJSON(item,window) {
         return null;
     }
 
+    // Ensure DOI is in URL format for the API call
     if (doi.startsWith("10")) {
         doi = `https://doi.org/${doi}`;
         Zotero.debug("DOI after URL conversion:");
@@ -143,6 +206,7 @@ async function fetchOpenAlexJSON(item,window) {
     full_api_url = `https://api.openalex.org/works/${doi}`
     Zotero.debug("Full API URL:")
     Zotero.debug(full_api_url)
+    
     let response = await fetch(full_api_url);    
     if (response.ok) {
         let data = await response.json();
